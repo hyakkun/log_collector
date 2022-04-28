@@ -5,12 +5,14 @@ import uvicorn
 from fastapi import Body, FastAPI
 from pymongo import MongoClient
 
+MONGO_CONN_STRING = 'mongodb://root:example@db:27017/'
+
 app = FastAPI()
 
 @app.post("/log")
 def register_logs(body=Body(...)):
     data = gzip.decompress(body).decode('utf-8')
-    with MongoClient('mongodb://root:example@localhost:27017/') as client:
+    with MongoClient(MONGO_CONN_STRING) as client:
         log_db = client.log_db
         log_collection = log_db.log_collection
         for line in data.splitlines():
